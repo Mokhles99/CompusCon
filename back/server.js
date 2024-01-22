@@ -4,11 +4,38 @@ const dbConfig = require("./app/config/db.config");
 
 const app = express();
 
+const bodyParser = require('body-parser')
+// const fileUpload = require('express-fileupload')
+
+const cloudinary = require('cloudinary')
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_CLOUD_SECRET,
+});
+//for large entity
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
 var corsOptions = {
   origin: "http://localhost:8081"
 };
 
 app.use(cors(corsOptions));
+//Routes
+
+const attestationRoute = require ("./app/routes/attestation.routes")
+const calendarRoute = require ("./app/routes/calendar.routes")
+const courseRoute = require ("./app/routes/course.routes")
+const formulaireStageRoute = require ("./app/routes/formulaireStage.routes")
+const noteRoute = require ("./app/routes/note.routes")
+app.use("/attestation",attestationRoute)
+app.use("/calendar",calendarRoute)
+app.use("/course",courseRoute)
+app.use("/formulaireStage",formulaireStageRoute)
+app.use("/note",noteRoute)
+
+
 
 
 app.use(express.json());
